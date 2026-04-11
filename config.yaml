@@ -1,0 +1,63 @@
+app:
+  polling_interval: 5
+  health_check_timeout: 10
+  degraded_threshold: 2.0
+  autoheal_threshold: 3
+  command_timeout: 60
+
+circuit_breaker:
+  failure_threshold: 5
+  recovery_timeout: 60
+
+notifications:
+  sound_enabled: true
+
+services:
+  - name: Ollama
+    url: http://localhost:11434
+    stop_cmd: ["taskkill", "/IM", "ollama.exe", "/F"]
+    start_cmd: ["ollama", "serve"]
+    type: process
+    depends_on: []
+
+  - name: LiteLLM
+    url: http://127.0.0.1:4000/health/liveliness
+    stop_cmd: ["taskkill", "/IM", "litellm.exe", "/F"]
+    start_cmd: ["litellm", "--config", "%USERPROFILE%\\.litellm\\config.yaml", "--port", "4000"]
+    type: process
+    depends_on: [Ollama]
+
+  - name: n8n
+    url: http://localhost:5678/healthz
+    stop_cmd: ["powershell", "-Command", "Get-NetTCPConnection -LocalPort 5678 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"]
+    start_cmd: ["cmd", "/c", "n8n", "start"]
+    type: process
+    depends_on: []
+
+  - name: Langfuse
+    url: http://localhost:3000/api/public/health
+    stop_cmd: ["docker", "stop", "langfuse-web"]
+    start_cmd: ["docker", "start", "langfuse-web"]
+    type: docker
+    depends_on: []
+
+n8n_api:
+  url: "http://localhost:5678/api/v1/executions"
+  header_key: "X-N8N-API-KEY"
+  api_key_env: "N8N_API_KEY"
+
+langfuse_api:
+  url: "http://localhost:3000/api/public/metrics"
+  public_key_env: "LANGFUSE_PUBLIC_KEY"
+  secret_key_env: "LANGFUSE_SECRET_KEY"
+  daily_budget_limit: 1.0
+
+tests:
+  replyline_webhook: 'node C:\Dev\ai-vibe-engineering\bridges\replyline\send-code-review-webhook.mjs'
+
+qdrant_api:
+  url: "http://localhost:6333/collections"
+
+scripts:
+  profile_local_cmd: ["powershell", "-ExecutionPolicy", "Bypass", "-File", "%USERPROFILE%\\ai-stack\\switch-review-profile.ps1", "-Mode", "local"]
+  profile_cloud_cmd: ["powershell", "-ExecutionPolicy", "Bypass", "-File", "%USERPROFILE%\\ai-stack\\switch-review-profile.ps1", "-Mode", "cloud"]
