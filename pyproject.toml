@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "textual>=8.2.3",
-    "textual-plotext>=0.5.0",
+    "textual-plotext>=1.0.1",
     "aiohttp>=3.9.0",
     "PyYAML>=6.0.3",
     "python-dotenv>=1.0.0",
