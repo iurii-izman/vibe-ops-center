@@ -22,7 +22,7 @@ jobs:
         run: |
           set -eux
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install --upgrade pip "setuptools>=78.1.1"
           .venv/bin/python -m pip install -e ".[dev]"
 
       - name: Ruff
@@ -62,7 +62,7 @@ jobs:
         run: |
           set -eux
           python -m venv .venv
-          "$VENV_PY" -m pip install --upgrade pip
+          "$VENV_PY" -m pip install --upgrade pip "setuptools>=78.1.1"
           "$VENV_PY" -m pip install -e ".[dev]"
 
       - name: pip-audit
