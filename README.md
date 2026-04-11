@@ -2,6 +2,8 @@
 
 Terminal-based operations dashboard for managing an AI infrastructure stack (health checks, budgets, Docker, auto-heal).
 
+Repository: https://github.com/iurii-izman/vibe-ops-center
+
 ## Features
 
 - Real-time service monitoring (Ollama, LiteLLM, n8n, Langfuse, Qdrant)
