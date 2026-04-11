@@ -7,7 +7,7 @@ requires-python = ">=3.10"
 dependencies = [
     "textual>=8.2.3",
     "textual-plotext>=0.5.0",
-    "aiohttp>=3.9.0",
+    "aiohttp>=3.13.5",
     "PyYAML>=6.0.3",
     "python-dotenv>=1.0.0",
 ]
